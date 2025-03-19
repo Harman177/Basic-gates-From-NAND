@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AND Gate Using UNIVERSAL Gates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #151b15;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #f7150a;
+        }
+        p {
+            line-height: 1.6;
+        }
+        .diagram {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .diagram img {
+            width: 300px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        footer {
+            text-align: center;
+            padding: 0.5px ;
+            background-color: #101410;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>AND Gate Using NAND Gate</h1>
+    </header>
+
+    <div class="container">
+        <h2>Introduction to NAND Gate</h2>
+        <p>
+            The NAND gate is a universal logic gate that can be constructed using basic gates like <strong>AND</strong> and <strong>NOT</strong>. It performs the logical operation of an AND gate followed two nand gate. The output of a NAND gate is <strong>0</strong> only when all inputs are <strong>1</strong>; otherwise, the output is <strong>1</strong>.
+        </p>
+
+        <h2>AND Gate Using NAND Gate</h2>
+        <div class="controls">
+            <label for="inputA">Input A:</label>
+            <select id="inputA" title="Select Input A">
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+    
+            <label for="inputB">Input B:</label>
+            <select id="inputB" title="Select Input B">
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+    
+            <button onclick="simulate()">Simulate</button>
+        </div>
+    
+        <canvas id="circuitCanvas" width="500" height="250"></canvas>
+        <div class="output" id="result">Output: ?</div>
+    
+        <script>
+            const canvas = document.getElementById("circuitCanvas");
+            const ctx = canvas.getContext("2d");
+    
+            function NAND(a, b) {
+                return !(a && b);
+            }
+    
+            function AND_using_NAND(a, b) {
+                let nand1 = NAND(a, b);    
+                let output = NAND(nand1, nand1); // Second NAND
+                return { nand1, output };
+            }
+    
+            function drawNANDGate(x, y) {
+                ctx.beginPath();
+                ctx.moveTo(x, y - 20);
+                ctx.lineTo(x + 30, y - 20);
+                ctx.lineTo(x + 30, y + 20);
+                ctx.lineTo(x, y + 20);
+                ctx.arc(x + 40, y, 20, Math.PI / 2, -Math.PI / 2, true);
+                ctx.stroke();
+    
+                ctx.beginPath();
+                ctx.arc(x + 60, y, 5, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+    
+            function drawCircuit(a, b, nand1, output) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+                ctx.fillStyle = "black";
+                ctx.font = "16px Arial";
+    
+                // Inputs
+                ctx.fillText("A", 20, 50);
+                ctx.fillText("B", 20, 100);
+                ctx.fillText(a, 40, 50);
+                ctx.fillText(b, 40, 100);
+    
+                // First NAND Gate
+                ctx.beginPath();
+                ctx.moveTo(60, 50); ctx.lineTo(100, 50);
+                ctx.moveTo(60, 100); ctx.lineTo(100, 100);
+                ctx.stroke();
+                drawNANDGate(100, 75);
+    
+                // First NAND Output Line
+                ctx.beginPath();
+                ctx.moveTo(160, 75);
+                ctx.lineTo(180, 75);
+                ctx.stroke();
+    
+                // Second NAND Gate (NOT operation)
+                drawNANDGate(180, 75);
+    
+                // Final Output Line
+                ctx.beginPath();
+                ctx.moveTo(240, 75);
+                ctx.lineTo(270, 75);
+                ctx.stroke();
+            }
+    
+            function simulate() {
+                let a = parseInt(document.getElementById("inputA").value);
+                let b = parseInt(document.getElementById("inputB").value);
+                
+                let { nand1, output } = AND_using_NAND(a, b);
+    
+                document.getElementById("result").innerText = "Output: " + output;
+                drawCircuit(a, b, nand1, output);
+            }
+    
+            simulate();
+        </script>
+
+        <h2>Truth Table</h2>
+        <p>
+            The truth table for a NAND gate shows the output for all possible combinations of inputs.
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Input A</th>
+                    <th>Input B</th>
+                    <th>AND Output</th>
+                    <th>NAND Output (NOT AND)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>How Does It Work?</h2>
+        <p>
+            Here we have used two NAND gates to implement the AND operation. The first NAND gate performs the AND operation, and the second NAND gate inverts the output of the first gate to get the final AND output.
+        </p>
+        <ol>
+            <li><strong>NAND Operation</strong>: The NAND gate takes two inputs (A and B) and produces an output that is <strong>1</strong> only if both inputs are <strong>0</strong>.</li>
+            <li><strong>Second NAND Operation</strong>: This NAND gate inverts the output of the  first NAND gate. If the first NAND output is <strong>1</strong>, the NAND output becomes <strong>0</strong>, and vice versa.</li>
+        </ol>
+
+        <h2>Applications of NAND Gates</h2>
+        <p>
+            NAND gates are widely used in digital circuits because of their universal property. Some common applications include:
+        </p>
+        <ul>
+            <li>Building other logic gates (AND, OR, NOT, etc.).</li>
+            <li>Memory circuits (e.g., SRAM).</li>
+            <li>Arithmetic circuits (e.g., adders).</li>
+            <li>Control circuits (e.g., multiplexers).</li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Basic Gates Using Universal Gates</p>
+    </footer>
+
+</body>
+</html>
